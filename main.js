@@ -1,19 +1,32 @@
 import * as THREE from "three";
 import WebGL from "three/addons/capabilities/WebGL.js";
+import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 
 import Stats from "stats.js";
-
+//setup renderr scene, canvas, camera stats
 const stats = new Stats();
 stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
 document.body.appendChild(stats.dom);
 
+const canvas = document.querySelector("#c");
+const renderer = new THREE.WebGLRenderer();
+
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(renderer.domElement);
+
 const scene = new THREE.Scene();
+
+//camera
 const camera = new THREE.PerspectiveCamera(
-  75,
+  45,
   window.innerWidth / window.innerHeight,
-  0.1,
-  1000,
+  1,
+  10000,
 );
+//controls
+const controls = new OrbitControls(camera, renderer.domElement);
+camera.position.set(0, 20, 100);
+controls.update();
 
 const createCube = (geometry, color, posX) => {
   const material = new THREE.MeshPhongMaterial({ color });
@@ -31,9 +44,6 @@ const createLight = () => {
   return light;
 };
 
-const renderer = new THREE.WebGLRenderer();
-renderer.setSize(window.innerWidth, window.innerHeight);
-document.body.appendChild(renderer.domElement);
 const light = createLight();
 scene.add(light);
 const boxWidth = 1;
@@ -67,16 +77,15 @@ function animate(time) {
   time *= 0.001;
   stats.begin();
 
-  requestAnimationFrame(animate);
-  renderer.render(scene, camera);
-
   cubes.forEach((cube, ndx) => {
     const speed = 1 + ndx * 0.1;
     const rot = time * speed;
     cube.rotation.x = rot;
     cube.rotation.y = rot;
   });
-
+  controls.update();
+  requestAnimationFrame(animate);
+  renderer.render(scene, camera);
   stats.end();
 }
 if (WebGL.isWebGLAvailable()) {

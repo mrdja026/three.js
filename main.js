@@ -5,10 +5,9 @@ import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import Stats from "stats.js";
 //setup renderr scene, canvas, camera stats
 const stats = new Stats();
-stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
-document.body.appendChild(stats.dom);
+// stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
+// document.body.appendChild(stats.dom);
 
-const canvas = document.querySelector("#c");
 const renderer = new THREE.WebGLRenderer();
 
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -75,7 +74,7 @@ cubes.forEach((c) => scene.add(c));
 
 function animate(time) {
   time *= 0.001;
-  stats.begin();
+  // stats.begin();
 
   cubes.forEach((cube, ndx) => {
     const speed = 1 + ndx * 0.1;
@@ -86,7 +85,7 @@ function animate(time) {
   controls.update();
   requestAnimationFrame(animate);
   renderer.render(scene, camera);
-  stats.end();
+  // stats.end();
 }
 if (WebGL.isWebGLAvailable()) {
   animate();
